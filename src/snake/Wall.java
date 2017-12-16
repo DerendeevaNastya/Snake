@@ -8,4 +8,9 @@ public class Wall implements IFieldObject {
             game.isGameOver = true;
         }
     }
+
+    @Override
+    public String getSymbol() {
+        return "#";
+    }
 }

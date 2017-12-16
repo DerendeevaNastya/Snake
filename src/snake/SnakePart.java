@@ -27,6 +27,11 @@ public class SnakePart extends IListedFieldObject {
         game.isGameOver = true;
     }
 
+    @Override
+    public String getSymbol() {
+        return "S";
+    }
+
     public Vector getPosition() {
         return position;
     }

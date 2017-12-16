@@ -27,4 +27,9 @@ public class Teleport implements IFieldObject {
         Teleport futureTeleport = (Teleport) oldCell;
         game.getCurrentLevel().getTeleports().remove(futureTeleport);
     }
+
+    @Override
+    public String getSymbol() {
+        return "T";
+    }
 }

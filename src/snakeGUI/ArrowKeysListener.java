@@ -1,10 +1,12 @@
 package snakeGUI;
 
 import snake.Direction;
+import snake.LevelSaver;
 import snake.Vector;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.util.Hashtable;
 
 public class ArrowKeysListener implements KeyListener {
@@ -28,6 +30,14 @@ public class ArrowKeysListener implements KeyListener {
 
         if (keysCode.containsKey(keyCode))
             parent.playerDirection = keysCode.get(keyCode);
+        if (keyCode == 32){
+            try {
+                LevelSaver saver = new LevelSaver(parent.getFieldPanel().getLevel());
+                saver.saveCurrentStateInFile();
+            } catch (IOException exeption){
+                exeption.printStackTrace();
+            }
+        }
     }
 
     @Override

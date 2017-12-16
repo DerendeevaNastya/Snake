@@ -9,6 +9,7 @@ import java.util.HashSet;
 class FieldPanel extends JPanel {
     private int cellSize;
     private Level level;
+    public Level getLevel(){return level;}
     private HashSet<FieldObjectImage> labels;
     private ImageSaver imageSaver;
 

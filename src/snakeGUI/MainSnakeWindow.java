@@ -1,12 +1,12 @@
 package snakeGUI;
 
-import snake.Game;
-import snake.TurnException;
-import snake.Vector;
+import snake.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 class MainSnakeWindow extends JFrame
 {
@@ -19,10 +19,29 @@ class MainSnakeWindow extends JFrame
     private FieldPanel fieldPanel;
     private ScorePanel scorePanel;
 
-    MainSnakeWindow(Game game) {
-        super("Snake");
-        setWindowSizeConstants(game);
+    public FieldPanel getFieldPanel(){return fieldPanel;}
 
+    private Game createGame(String fileName){
+        Level[] levels = new Level[1];
+        LevelGenerator level = new LevelGenerator();
+        Level newLevel = null;
+        try {
+            newLevel = new Level(new FieldReader(fileName), 4, 5, 2);
+        } catch (IllegalAccessException | InstantiationException
+                | NoSuchMethodException | InvocationTargetException
+                | IOException e1) {
+
+            e1.printStackTrace();
+        }
+        levels[0] = newLevel;
+        Game game = new Game(levels);
+        return game;
+    }
+
+    public void startNewGame(String fileName){
+        Game game = createGame(fileName);
+
+        setWindowSizeConstants(game);
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setSize(sizeWidth, sizeHeight);
@@ -38,6 +57,11 @@ class MainSnakeWindow extends JFrame
 
         setStartSettings(game);
     }
+
+    MainSnakeWindow(){
+        super("Snake");
+    }
+
 
     private void setStartSettings(Game game) {
         addKeyListener(new ArrowKeysListener(this));

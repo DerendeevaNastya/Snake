@@ -1,5 +1,6 @@
 package snake;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import static java.lang.Math.abs;

@@ -26,7 +26,7 @@ public class LevelGenerator {
         return new Level(new FieldReader(fileName), applesCount, 5, 2);
     }
 
-    private void createLevelFile(String fileName, String[][] field) throws IOException {
+    public void createLevelFile(String fileName, String[][] field) throws IOException {
         File levelFile = new File(Settings.LEVEL_URL +fileName);
         FileWriter writeFile = new FileWriter(levelFile);
         StringBuilder strField = new StringBuilder();

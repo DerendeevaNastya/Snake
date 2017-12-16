@@ -6,4 +6,9 @@ public class Apple implements IFieldObject {
     public void intersectWithSnake(Game game) {
         game.getCurrentLevel().addSnakePart();
     }
+
+    @Override
+    public String getSymbol() {
+        return "A";
+    }
 }

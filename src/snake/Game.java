@@ -31,6 +31,7 @@ public class Game {
         }
 
         if (!getCurrentLevel().appleGenerator.isNeedToAdd(oldCell)) {
+//            isGameOver = true;
             return;
         }
 
