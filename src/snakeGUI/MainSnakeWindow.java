@@ -21,9 +21,13 @@ class MainSnakeWindow extends JFrame
 
     public FieldPanel getFieldPanel(){return fieldPanel;}
 
-    private Game createGame(String fileName){
+    private Game createGame(String fileName) throws
+            NoSuchMethodException, InstantiationException,
+            IllegalAccessException, IOException,
+            InvocationTargetException {
         Level[] levels = new Level[1];
-        LevelGenerator level = new LevelGenerator();
+        LevelGenerator levelGenerator = new LevelGenerator();
+        Level level = levelGenerator.createAndGetLevel(fileName, 5, 2);
         Level newLevel = null;
         try {
             newLevel = new Level(new FieldReader(fileName), 4, 5, 2);
@@ -39,8 +43,20 @@ class MainSnakeWindow extends JFrame
     }
 
     public void startNewGame(String fileName){
-        Game game = createGame(fileName);
-
+        Game game = null;
+        try {
+            game = createGame(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         setWindowSizeConstants(game);
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());

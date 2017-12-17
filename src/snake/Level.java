@@ -1,13 +1,20 @@
 package snake;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static java.lang.Math.abs;
 
 public class Level {
     private IFieldObject[][] field;
     private Snake snake;
+
+    private List<Pipka> pipkas;
+    public List<Pipka> getPipkas(){return pipkas;}
+    public void setPipkas(List<Pipka> pipkas) {this.pipkas = pipkas;}
+
     private HashMap<Teleport, Vector> teleports;
     public AppleGenerator appleGenerator;
     private JuggernautGenerator juggernautGenerator;
@@ -32,6 +39,7 @@ public class Level {
     public Level(FieldReader reader, int applesCount, int juggernautCount, int teleportsPairCount) {
         field = reader.getField();
         snake = reader.getSnake();
+        pipkas = reader.getPipkas();
         teleports = reader.getTeleports();
         appleGenerator = new AppleGenerator(applesCount);
         juggernautGenerator = new JuggernautGenerator(juggernautCount);
@@ -40,6 +48,31 @@ public class Level {
 
     public HashMap<Teleport, Vector> getTeleports() {
         return teleports;
+    }
+
+    public void movePipkas(){
+        List<Pipka> newPipkas = new ArrayList<>();
+        for (Pipka pipka : pipkas){
+            if (this.getFieldObject(pipka.getPosition().x, pipka.getPosition().y) instanceof SnakeHead)
+                continue;
+            setObjectOnField(pipka.getPosition(), new Empty());
+        }
+
+        for (Pipka pipka : pipkas){
+            Vector pipkaPosition = pipka.getPosition()
+                    .sum(pipka.getNextDirection())
+                    .looping(this.getLevelSize().x, this.getLevelSize().y);;
+            if (getFieldObject(pipkaPosition.x, pipkaPosition.y) instanceof SnakeHead ||
+                    getFieldObject(pipka.getPosition().x, pipka.getPosition().y) instanceof SnakeHead)
+                continue;
+            pipka.setNewPosition(this);
+            newPipkas.add(pipka);
+        }
+
+        pipkas = newPipkas;
+        for (Pipka pipka : pipkas){
+            setObjectOnField(pipka.getPosition(), pipka);
+        }
     }
 
     public IFieldObject moveSnakeAndReturnOldCell(Vector snakeDirection) {

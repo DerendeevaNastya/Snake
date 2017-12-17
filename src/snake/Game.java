@@ -2,6 +2,8 @@ package snake;
 
 
 import javax.xml.stream.FactoryConfigurationError;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
     private Level[] levels;
@@ -15,9 +17,21 @@ public class Game {
             throw new TurnException();
         }
 
+        for (Pipka pipka : getCurrentLevel().getPipkas()){
+            pipka.setNewDirection(getCurrentLevel());
+        }
+
         IFieldObject oldCell = getCurrentLevel()
                 .moveSnakeAndReturnOldCell(playerDirection);
         oldCell.intersectWithSnake(this);
+        List<Pipka> pipkas = new ArrayList<>();
+        for (Pipka pipka : getCurrentLevel().getPipkas()){
+            if (!pipka.getPosition().equals(oldCell))
+                pipkas.add(pipka);
+        }
+        getCurrentLevel().setPipkas(pipkas);
+        getCurrentLevel().movePipkas();
+
 
         if(isGameOver) {
             return;
@@ -30,8 +44,20 @@ public class Game {
             getCurrentLevel().getJuggernautGenerator().generate(getCurrentLevel());
         }
 
+        boolean appleOnField = false;
+        for (int x = 0; x < this.getCurrentLevel().getLevelSize().x; x++) {
+            for (int y = 0; y < getCurrentLevel().getLevelSize().y; y++) {
+                if (getCurrentLevel().getFieldObject(x, y).getSymbol() == "A") {
+                    appleOnField = true;
+                }
+            }
+        }
+        if (!appleOnField) {
+            getCurrentLevel().appleGenerator.generate(getCurrentLevel());
+            return;
+        }
+
         if (!getCurrentLevel().appleGenerator.isNeedToAdd(oldCell)) {
-//            isGameOver = true;
             return;
         }
 

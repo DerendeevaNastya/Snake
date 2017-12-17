@@ -108,6 +108,7 @@ public class LevelGenerator {
         createParameters(field, 1, "A");
         createParameters(field, 1, "J");
         createParameters(field, teleportCount, "T");
+        createParameters(field, 10, "P");
     }
 
     private void createParameters(String[][] field, int count, String parameter) {

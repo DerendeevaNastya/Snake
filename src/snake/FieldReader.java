@@ -17,6 +17,7 @@ public class FieldReader {
             CHARACTER_TO_FIELD_OBJECT;
     private IFieldObject[][] field;
     private Snake snake;
+    private List<Pipka> pipkas;
 
     static {
         CHARACTER_TO_FIELD_OBJECT = new HashMap<>();
@@ -30,6 +31,8 @@ public class FieldReader {
                 (x, y, vector, parent, child) -> new Apple());
         CHARACTER_TO_FIELD_OBJECT.put('T',
                 (x, y, vector, parent, child) -> new Teleport());
+        CHARACTER_TO_FIELD_OBJECT.put('P',
+                (x, y, vector, parent, child) -> new Pipka());
         CHARACTER_TO_FIELD_OBJECT.put('S', SnakePart::new);
         CHARACTER_TO_FIELD_OBJECT.put('H', SnakeHead::new);
     }
@@ -41,6 +44,7 @@ public class FieldReader {
         fillFieldAndCreateSnake();
         fillSnakePartsDirections();
     }
+
 
     private void fillFieldAndCreateSnake() throws NoSuchMethodException,
             IllegalAccessException, InvocationTargetException,
@@ -55,14 +59,22 @@ public class FieldReader {
         } catch (IndexOutOfBoundsException e){
             throw new IllegalArgumentException("File is empty. Can't create a new level");
         }
+        this.pipkas = new ArrayList<>();
         List<SnakePart> snakeParts = new ArrayList<>();
         SnakeHead head = null;
         for(int i = 0; i < lines.size(); i++){
             for (int j = 0; j < lines.get(i).length(); j++){
                 Character symbol = lines.get(i).charAt(j);
-                field[i][j] = CHARACTER_TO_FIELD_OBJECT.get(symbol)
+                IFieldObject newObject = CHARACTER_TO_FIELD_OBJECT.get(symbol)
                         .createFieldObject(
                                 j, i, null,null,null);
+                if (newObject instanceof Pipka) {
+                    Pipka newPipka = new Pipka(j, i);
+                    this.pipkas.add(newPipka);
+                    field[i][j] = newPipka;
+                    continue;
+                }
+                field[i][j] = newObject;
                 if(symbol == 'S'){
                     snakeParts.add((SnakePart) field[i][j]);
                 }
@@ -151,6 +163,8 @@ public class FieldReader {
     public IFieldObject[][] getField() {
         return field;
     }
+
+    public List<Pipka> getPipkas() { return pipkas; }
 
     public Snake getSnake() {
         return snake;
